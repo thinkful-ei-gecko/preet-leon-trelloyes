@@ -3,8 +3,9 @@ import Card from './Card'
 import './List.css';
 
 export default function List(props) {
+
   return (
-    <section className='List'>
+     <section className='List'>
       <header className='List-header'>
         <h2>{props.header}</h2>
       </header>
@@ -19,7 +20,7 @@ export default function List(props) {
             handleDelete={props.handleDelete}
           />
         )}
-        <button
+        <button onClick={() => props.handleAddButton(props.listId)}
           type='button'
           className='List-add-button'
         >

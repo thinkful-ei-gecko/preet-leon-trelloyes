@@ -46,28 +46,43 @@ class App extends Component {
     }
   }
 
-  handleDeleteButton = (cardLetter, listId) => {
-    //go through the state.lists
-    //find the matching list id
-    //delete/filter the cardLetter
-    //set the new state
-    let foundList = this.state.lists.find(list => listId === list.id); //find the list that we are deleting from
-    let listIndex = this.state.lists.indexOf(foundList); //index of the list
-    foundList.cardIds.filter(cardId => cardId !== cardLetter); // take out the letter that we matched in foundList
-    let filteredList = this.state.lists.filter(list => list.id !== listId);
-    this.state.lists[this.state.lists.indexOf(foundList)] = filteredList;
-    // let newArray = filteredList.concat(foundList);
-    // console.log(foundList);
-    this.setState({
-      lists: 
-    })
-
+  handleDeleteButton = (cardLetter, listId) => { let listCopy = this.state.lists.map(list => list) 
+    let workList = listCopy.find(list => list.id === listId) 
+    let indexNumber = listCopy.indexOf(workList) 
+    let newList = workList.cardIds.filter(letter => letter !== cardLetter) 
+    listCopy[indexNumber].cardIds = newList 
+    this.setState({ 
+      lists: listCopy })
   }
 
+  newRandomCard = () => {
+    const id = Math.random().toString(36).substring(2, 4)
+      + Math.random().toString(36).substring(2, 4);
+    return {
+      id,
+      title: `Random Card ${id}`,
+      content: 'lorem ipsum',
+    }
+  }
+
+
+  handleAddButton = (listId) => {
+    let newCard = this.newRandomCard();
+    let newList  = this.state.lists.map(list => list)
+    let workList = newList.find(list => list.id === listId) 
+    let indexNumber = newList.indexOf(workList) 
+    newList[indexNumber].cardIds.push(newCard.id)
+    this.setState({
+      lists: newList,
+      allCards: {...this.state.allCards, [newCard.id]: newCard}
+    })
+
+      }
 
   render() {
     return (
       <main className='App'>
+      {console.log(this.state.allCards)}
         <header className='App-header'>
           <h1>Trelloyes!</h1>
         </header>
@@ -79,6 +94,7 @@ class App extends Component {
               header={list.header}
               cards={list.cardIds.map(id => this.state.allCards[id])}
               handleDelete={this.handleDeleteButton}
+              handleAddButton={this.handleAddButton}
             />
           ))}
         </div>
